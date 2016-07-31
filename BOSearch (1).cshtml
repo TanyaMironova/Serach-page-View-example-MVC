@@ -1,0 +1,48 @@
+@using Resources
+
+@{
+    ViewBag.Title = "Beneficial Owner - Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+  .ui-jqgrid .ui-paging-info {font-weight: normal;height:19px; margin-top:3px;margin-right:4px;display: block;}
+</style>
+
+<div class="container content-container">
+    <div class="row">
+        <div class="PageTitle">BO Requests</div>
+    </div>
+   @Html.Partial("_SearchHeader", Model)
+        
+   @* <div class="row table-responsive" style="margin-bottom: 20px;">
+        <div id="divPendingAgendaResults">
+        </div>
+    </div>*@
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#btnGenerateReport').click(function (e) {
+            if (HandleEnterKeyEvent() == false) {
+                return false;
+            }
+            GetPendingAgendaGrid();
+        });
+    });
+    function GetPendingAgendaGrid() {
+        var getPendingAgendaInput = { "market": $("#selectSearchMarket").val(), "meetingFromDate": $('#txtReportMeetingFrom').val(), "meetingToDate": $('#txtReportMeetingTo').val(), "__RequestVerificationToken": $('#__AjaxAntiForgeryForm input[name=__RequestVerificationToken]').val() };
+       @* AjaxCall('@Url.Content("~/Report/GetPendingAgendaGrid")', getPendingAgendaInput, 100, GetPendingAgendaGridSuccess, 'POST', null);*@
+    }
+    function GetPendingAgendaGridSuccess(data) {
+        if (data == 'Invalid Country Code') {
+            $('#divMeetingErrors').html($('#hdnCommonErrorMsg').val());
+        }
+        else if (data.split("|")[0] == "Invalid Data") {
+            $('#divMeetingErrors').html(data.split("|")[1]);
+        } else {
+            $('#divPendingAgendaResults').html(data);
+        }
+    }
+
+</script> 
+
