@@ -1,0 +1,126 @@
+﻿@model GlobalAgenda.Web.Models.GacCommonModel
+
+<div class="row">
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Status</label>
+            <select id="selectSearchStatus" class="form-control">
+                <option value='Open'>Open</option>
+                <option value='PendingAudit'>Pending Audit</option>
+                <option value='Closed'>Closed</option>
+                   
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Market</label>
+            <select id="selectSearchMarket" class="form-control">
+                <option value=''>All</option>
+            @*    @foreach (var item in Model.MarketsList)
+                {
+                    <option value='@item.CountryCd'>@item.Name</option>
+                }  *@     
+            </select>
+        </div>
+    </div>
+
+
+   <div class="col-md-11 no_padding_left">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Created From Date</label>                      
+                <input type="text" id="txtReportMeetingFrom" class="form-control date-picker calender_icon" maxlength="11"/>
+            </div>
+        </div>
+   
+        <div class="col-md-3">
+            <div class="form-group" style="margin-left:25px;">
+                <label>Created To Date</label>                      
+                <input type="text" id="txtReportMeetingTo" class="form-control date-picker calender_icon" maxlength="11" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <div class="row"> <label>&nbsp;</label></div>
+            <div class="row">
+                <button id="btnGenerateReport" type="submit" class="btn btn-primary btn-sm">Generate Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".date-picker").datepicker({ dateFormat: 'dd-M-yy' });
+        var statusDropDown = document.getElementById("selectSearchStatus");
+
+        statusDropDown.onchange = function () {
+            var selectedValue = statusDropDown.options[statusDropDown.selectedIndex].value;
+            if (selectedValue == "Closed") {
+                var isStatusClosed = 'N';
+            }
+            else {
+                var isStatusClosed = 'Y';
+            }
+            DesabledRecordAndMeetingDate(isStatusClosed);
+            alert('the value has changed');
+        };
+        if (selectedValue == null)
+        {
+            var selectedValue = statusDropDown.options[statusDropDown.selectedIndex].value;
+        }
+        if (selectedValue == "Closed") {
+            var isStatusClosed = 'N';
+        }
+        else {
+            var isStatusClosed = 'Y';
+             }
+
+        
+        DesabledRecordAndMeetingDate(isStatusClosed);
+    });
+
+    function DesabledRecordAndMeetingDate(isStatusClosed) {
+        if (isStatusClosed == 'Y') {
+            $('#txtReportMeetingFrom').prop('disabled', true);
+            $('#txtReportMeetingTo').prop('disabled', true);
+
+        } else {
+            $('#txtReportMeetingFrom').prop('disabled', false);
+            $('#txtReportMeetingTo').prop('disabled', false);
+        }
+    }
+    $(function () {
+        $("#txtReportMeetingFrom").datepicker({
+            dateFormat: 'dd-M-yy',
+            defaultDate: new Date()
+        });
+
+        $("#txtReportMeetingTo").datepicker({
+            dateFormat: 'dd-M-yy',
+            defaultDate: new Date()
+        });
+
+        $("#txtReportMeetingFrom").change(function () {
+            $('#txtReportMeetingTo').datepicker('destroy');
+            $("#txtReportMeetingTo").datepicker({
+                minDate: parseDate($("#txtReportMeetingFrom").val()),
+                dateFormat: 'dd-M-yy',
+                defaultDate: parseDate($("#txtReportMeetingFrom").val())
+            });
+        });
+
+        $("#txtReportMeetingTo").change(function () {
+            $('#txtReportMeetingFrom').datepicker('destroy');
+            $("#txtReportMeetingFrom").datepicker({
+                maxDate: parseDate($("#txtReportMeetingTo").val()),
+                dateFormat: 'dd-M-yy',
+                defaultDate: parseDate($("#txtReportMeetingTo").val())
+            });
+        });
+    });
+
+</script>
+
